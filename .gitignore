@@ -1,3 +1,4 @@
 diagrams/*.dia
+diagrams/*.dia~
 out/*
 temp_data/*
