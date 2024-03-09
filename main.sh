@@ -49,7 +49,7 @@ function main() {
         fi
         echo "DONE $task_name"
         task_name="downloading $target_file from $url"
-        wget -O "$target_file" "$url" --no-verbose
+        wget -O "$target_file" "$url"
         if [[ $? -ne 0 ]]; then
             echo "FAILED $task_name"
             return 1
