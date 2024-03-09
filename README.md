@@ -22,6 +22,7 @@ Run this line to check if you have `sqlite3`:
 sqlite3 --version
 ```
 SQLite v3.37.0+ is needed for [STRICT table supports](https://www.sqlite.org/stricttables.html). If you do not have the [Command Line Shell For SQLite](https://sqlite.org/cli.html) in your system, refer to the official website for installation instruction.
+
 ### Internet connection
 
 Internet connection is necessary to download CSV files from FAO sites as mentioned in the [Introduction](#introduction).
@@ -29,8 +30,8 @@ Internet connection is necessary to download CSV files from FAO sites as mention
 ## Run
 
 ```bash
-git clone https://github.com/hnthap/gadm36_to_sql.git
-cd gadm36_to_sql
+git clone https://github.com/hnthap/gadm36_to_sql_and_csv.git
+cd gadm36_to_sql_and_csv
 source main.sh
 ```
 
