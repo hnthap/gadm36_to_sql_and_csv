@@ -6,8 +6,8 @@ CREATE TABLE geo_entity_type (
     , CONSTRAINT pk_geo_entity_type PRIMARY KEY (geo_entity_type_id)
     , CONSTRAINT uq_geo_entity_type
       UNIQUE (primary_name, eng_name)
-    , CONSTRAINT ck_geo_entity_not_null_all_names
-      CHECK (primary_name IS NOT NULL AND eng_name IS NOT NULL)
+    , CONSTRAINT ck_geo_entity_type_not_null_all_names
+      CHECK (primary_name IS NOT NULL OR eng_name IS NOT NULL)
 ) STRICT;
 
 CREATE INDEX ix_geo_entity_type ON geo_entity_type (geo_entity_type_id);
@@ -15,7 +15,7 @@ CREATE INDEX ix_geo_entity_type ON geo_entity_type (geo_entity_type_id);
 CREATE TABLE geo_entity (
       geo_entity_id INTEGER NOT NULL
     , gadm36_code TEXT NOT NULL
-    , primary_name TEXT
+    , primary_name TEXT NOT NULL
     , native_name TEXT
     , geo_entity_type_id INTEGER
     , parent_geo_entity_id INTEGER
