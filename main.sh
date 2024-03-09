@@ -17,6 +17,17 @@ function main() {
         "https://data.apps.fao.org/catalog/dataset/e53331d6-a4b4-405e-b4e7-6bccaf169b33/resource/ccbdd10e-d3e7-4613-bde2-f1efdc2e9b3f/download/gadm36_3.csv" \
     )
 
+    # Create necessary folders
+    declare -a necessary_folders=( \
+        "$data_dir" \
+        "out" \
+    )
+    for folder in "${necessary_folders[@]}"; do
+        if [[ ! -d "$folder" ]]; then
+            mkdir "$folder"
+        fi
+    done
+
     # Remove the temporary database file
     task_name="deleting $temp_db_path if it exists"
     rm --force $temp_db_path
