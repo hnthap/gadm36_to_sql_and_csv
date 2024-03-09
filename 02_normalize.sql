@@ -8,17 +8,6 @@ CREATE INDEX ix_raw_gadm36_3 ON raw_gadm36_3 (gadm36_3);
 INSERT INTO geo_entity_type (primary_name, eng_name)
 VALUES ('Country or Region', 'Country or Region');
 
--- WITH RECURSIVE splitted (gadm36_code, value, remained) AS (
---     SELECT r.gadm36_1, null, r.VARNAME_1 || '|'
---     FROM raw_gadm36_1 AS r
---     UNION ALL
---     SELECT
---         gadm36_code,
---         substr(remained, 0, instr(remained, '|')),
---         substr(remained, instr(remained, '|') + 1)
---     FROM splitted WHERE remained != ''
--- )
-
 INSERT OR IGNORE INTO geo_entity_type (primary_name, eng_name)
 SELECT TYPE_1, ENGTYPE_1 FROM raw_gadm36_1 GROUP BY TYPE_1;
 
@@ -27,6 +16,10 @@ SELECT type_2, engtype_2 FROM raw_gadm36_2 GROUP BY type_2;
 
 INSERT OR IGNORE INTO geo_entity_type (primary_name, eng_name)
 SELECT type_3, engtype_3 FROM raw_gadm36_3 GROUP BY type_3;
+
+DELETE FROM geo_entity_type WHERE primary_name = '' AND eng_name = '';
+UPDATE OR REPLACE geo_entity_type SET eng_name = NULL WHERE eng_name = '';
+UPDATE OR REPLACE geo_entity_type SET primary_name = eng_name WHERE primary_name = '';
 
 -- Populate the table geo_entity from raw_gadm36_0
 
@@ -38,7 +31,7 @@ UPDATE geo_entity
 SET geo_entity_type_id = (
     SELECT t.geo_entity_type_id
     FROM geo_entity_type AS t
-    WHERE t.eng_name = 'country/region'
+    WHERE t.eng_name = 'Country or Region'
 );
 
 -- Populate the table geo_entity from raw_gadm36_1
@@ -130,3 +123,15 @@ SELECT g.geo_entity_id, s.value
 FROM splitted AS s
     INNER JOIN geo_entity AS g ON s.gadm36_code = g.gadm36_code
 WHERE s.value IS NOT NULL AND s.value != '';
+
+-- Clean up geo_entity's empty strings
+
+UPDATE geo_entity
+SET primary_name = native_name
+WHERE primary_name = '';
+
+UPDATE geo_entity
+SET primary_name = substr(gadm36_code, length(gadm36_code) - 2)
+WHERE primary_name = '';
+
+UPDATE geo_entity SET native_name = NULL WHERE native_name = '';
