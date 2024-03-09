@@ -31,7 +31,7 @@ function main() {
         target_file="${target_files[$i]}"
         url="${urls[$i]}"
         task_name="deleting $target_file"
-        rm "$target_file"
+        rm --force "$target_file"
         if [[ $? -ne 0 ]]; then
             echo "FAILED $task_name"
             return 1
