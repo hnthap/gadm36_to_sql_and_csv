@@ -11,7 +11,7 @@
 | Global - Admin 2 | [here](https://data.apps.fao.org/catalog/dataset/gadm36-code-list-global-admin-2) | [here](https://data.apps.fao.org/catalog/dataset/16eedb5a-fc69-49fb-b3ea-ea772d189b04/resource/e900f155-86a0-4588-9295-ff3bc0ffcdcd/download/gadm36_2.csv) |
 | Global - Admin 3 | [here](https://data.apps.fao.org/catalog/dataset/gadm36-code-list-global-admin-3) | [here](https://data.apps.fao.org/catalog/dataset/e53331d6-a4b4-405e-b4e7-6bccaf169b33/resource/ccbdd10e-d3e7-4613-bde2-f1efdc2e9b3f/download/gadm36_3.csv) |
 
-The problem is some people need to use these data with SQL. So I write the schema of necessary tables and some Bash script to generate tabular data for these tables, using [SQLite 3](https://www.sqlite.org/).
+The problem is some people need to use these data with SQL. So I write the schema of necessary tables and some PowerShell script to generate tabular data for these tables, using [SQLite 3](https://www.sqlite.org/).
 
 ## Prerequisites
 
@@ -29,45 +29,15 @@ Internet connection is necessary to download CSV files from FAO sites as mention
 
 ## Run
 
-```bash
+In PowerShell:
+
+```powershell
 git clone https://github.com/hnthap/gadm36_to_sql_and_csv.git
-cd gadm36_to_sql_and_csv
-source main.sh
+Set-Location gadm36_to_sql_and_csv
+./main.ps1
 ```
 
 After it's done, you will have your resulted files appeared in the `out/` directory.
-
-## Explain the generated files
-
-Let's take a look at some existing and generated files, which you will need later:
-
-```
-(root)
-    ├─ out/ 
-    |   ├─── geo_entity_type.csv
-    |   ├─── geo_entity_var_name.csv
-    |   └─── geo_entity.csv
-    ├─ 01_schema.sql
-    └─ ...
-```
-
-### 01_schema.sql
-
-SQL script file to create necessary tables (`geo_entity`, `geo_entity_type`, `geo_entity_var_name`) and indices.
-
-![SQLite database schema diagram](diagrams/gadm36_sqlite3.png)
-
-### out/geo_entity_type.csv
-
-Data of the `geo_entity_type` table as described in [the schema](#01_schemasql).
-
-### out/geo_entity.csv
-
-Data of the `geo_entity` table as described in [the schema](#01_schemasql).
-
-### out/geo_entity_var_name.csv
-
-Data of the `geo_entity_var_name` table as described in [the schema](#01_schemasql).
 
 ## Licenses
 
