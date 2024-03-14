@@ -56,8 +56,6 @@ function main {
     Write-Host "populating those tables in $tempDbPath"
     cmd.exe /c "sqlite3.exe $tempDbPath < 02_normalize.sql"
 
-    cmd.exe /c "sqlite3.exe $tempDbPath"
-
     # Export each table to a CSV file
     Write-Host "exporting each table to a CSV file"
     cmd.exe /c "sqlite3.exe $tempDbPath < 03_store.sql"
