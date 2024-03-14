@@ -29,45 +29,15 @@ Internet connection is necessary to download CSV files from FAO sites as mention
 
 ## Run
 
-```bash
+In PowerShell:
+
+```powershell
 git clone https://github.com/hnthap/gadm36_to_sql_and_csv.git
-cd gadm36_to_sql_and_csv
-source main.sh
+Set-Location gadm36_to_sql_and_csv
+./main.ps1
 ```
 
 After it's done, you will have your resulted files appeared in the `out/` directory.
-
-## Explain the generated files
-
-Let's take a look at some existing and generated files, which you will need later:
-
-```
-(root)
-    ├─ out/ 
-    |   ├─── geo_entity_type.csv
-    |   ├─── geo_entity_var_name.csv
-    |   └─── geo_entity.csv
-    ├─ 01_schema.sql
-    └─ ...
-```
-
-### 01_schema.sql
-
-SQL script file to create necessary tables (`geo_entity`, `geo_entity_type`, `geo_entity_var_name`) and indices.
-
-![SQLite database schema diagram](diagrams/gadm36_sqlite3.png)
-
-### out/geo_entity_type.csv
-
-Data of the `geo_entity_type` table as described in [the schema](#01_schemasql).
-
-### out/geo_entity.csv
-
-Data of the `geo_entity` table as described in [the schema](#01_schemasql).
-
-### out/geo_entity_var_name.csv
-
-Data of the `geo_entity_var_name` table as described in [the schema](#01_schemasql).
 
 ## Licenses
 
