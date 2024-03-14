@@ -1,44 +1,62 @@
-
-CREATE TABLE geo_entity_type (
-      geo_entity_type_id INTEGER NOT NULL
-    , primary_name TEXT NOT NULL
-    , eng_name TEXT
-    , CONSTRAINT pk_geo_entity_type PRIMARY KEY (geo_entity_type_id)
-    , CONSTRAINT uq_geo_entity_type
-      UNIQUE (primary_name, eng_name)
-    , CONSTRAINT ck_geo_entity_type_not_null_all_names
-      CHECK (primary_name IS NOT NULL OR eng_name IS NOT NULL)
+DROP TABLE IF EXISTS place_var_name;
+DROP TABLE IF EXISTS place;
+DROP TABLE IF EXISTS place_type;
+CREATE TABLE place_type (
+    place_type_id INTEGER NOT NULL,
+    CONSTRAINT pk_place_type
+        PRIMARY KEY (place_type_id)
 ) STRICT;
-
-CREATE INDEX ix_geo_entity_type ON geo_entity_type (geo_entity_type_id);
-
-CREATE TABLE geo_entity (
-      geo_entity_id INTEGER NOT NULL
-    , gadm36_code TEXT NOT NULL
-    , primary_name TEXT NOT NULL
-    , native_name TEXT
-    , geo_entity_type_id INTEGER
-    , parent_geo_entity_id INTEGER
-    , CONSTRAINT pk_geo_entity PRIMARY KEY (geo_entity_id)
-    , CONSTRAINT uq_geo_entity_gadm36_code UNIQUE (gadm36_code)
-    -- , CONSTRAINT uq_geo_entity_primary_name_native_name
-    --   UNIQUE (primary_name, native_name)
-    , CONSTRAINT fk_geo_entity_geo_entity_type
-      FOREIGN KEY (geo_entity_type_id)
-      REFERENCES geo_entity_type ON DELETE SET NULL
-    , CONSTRAINT fk_geo_entity_geo_entity_type
-      FOREIGN KEY (parent_geo_entity_id)
-      REFERENCES geo_entity ON DELETE SET NULL
+CREATE TABLE place_type_name (
+    place_type_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    native INTEGER,
+    CONSTRAINT uq_place_type_name
+        UNIQUE (place_type_id, name, native),
+    CONSTRAINT fk_place_type_name_place_type
+        FOREIGN KEY (place_type_id)
+        REFERENCES place_type (place_type_id)
+        ON DELETE CASCADE,
+    CONSTRAINT ck_place_type_name_native_is_boolean
+        CHECK (native IN (0, 1))
 ) STRICT;
-
-CREATE INDEX ix_geo_entity ON geo_entity (geo_entity_id);
-
-CREATE TABLE geo_entity_var_name (
-      geo_entity_id INTEGER NOT NULL
-    , var_name TEXT NOT NULL
-    , CONSTRAINT uq_geo_entity_var_name UNIQUE (geo_entity_id, var_name)
-    , CONSTRAINT fk_geo_entity_var_name_geo_entity
-      FOREIGN KEY (geo_entity_id) REFERENCES geo_entity ON DELETE CASCADE 
+CREATE TABLE place (
+    place_id INTEGER NOT NULL,
+    gadm36_code TEXT NOT NULL,
+    name TEXT NOT NULL,
+    place_type_id INTEGER NOT NULL,
+    parent_place_id INTEGER,
+    CONSTRAINT pk_place
+        PRIMARY KEY (place_id),
+    CONSTRAINT uq_place_gadm36_code
+        UNIQUE (gadm36_code),
+    CONSTRAINT fk_place_place_type
+        FOREIGN KEY (place_type_id)
+        REFERENCES place_type (place_type_id) 
+        ON DELETE SET NULL,
+    CONSTRAINT fk_place_place 
+        FOREIGN KEY (parent_place_id)
+        REFERENCES place (place_id)
+        ON DELETE SET NULL
 ) STRICT;
-
-CREATE INDEX ix_geo_entity_var_name ON geo_entity_var_name (geo_entity_id);
+CREATE TABLE place_var_name (
+    place_id INTEGER NOT NULL,
+    var_name TEXT NOT NULL,
+    CONSTRAINT uq_place_var_name
+        UNIQUE (place_id, var_name),
+    CONSTRAINT fk_place_var_name_place
+        FOREIGN KEY (place_id)
+        REFERENCES place (place_id)
+        ON DELETE CASCADE
+) STRICT;
+CREATE TABLE place_native_name (
+    place_id INTEGER NOT NULL,
+    native_name TEXT NOT NULL,
+    CONSTRAINT uq_place_native_name
+        UNIQUE (place_id, native_name),
+    CONSTRAINT fk_place_native_name_place
+        FOREIGN KEY (place_id)
+        REFERENCES place (place_id)
+        ON DELETE CASCADE
+) STRICT;
+CREATE INDEX ix_place_type ON place_type (place_type_id);
+CREATE INDEX ix_place ON place (place_id);

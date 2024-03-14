@@ -1,4 +1,6 @@
+*.db
 diagrams/*.dia
 diagrams/*.dia~
 out/*
 temp_data/*
+TODO
